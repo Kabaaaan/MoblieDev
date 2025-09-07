@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'converter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class CalculationPage extends StatefulWidget {
   @override
@@ -34,6 +35,15 @@ class _CalculationPageState extends State<CalculationPage> {
         _isLoading = true;
         _errorMessage = null;
       });
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _errorMessage = 'Нет интернет-соединения';
+        _isLoading = false;
+      });
+      return;
+    }
 
       final data = await fetchCurrencyRates();
       valutesData = data['rates'];
